@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- =====================================================
+       Greeting Panel
+       ClockModule updates #clock, #date, #greeting every second
+       ===================================================== -->
+  <header>
+    <span id="clock" aria-live="polite" aria-label="Current time"></span>
+    <span id="date"></span>
+    <span id="greeting"></span>
+  </header>
+
+  <main>
+
+    <!-- ===================================================
+         Focus Timer Section
+         TimerModule owns all controls below
+         =================================================== -->
+    <section id="timer" aria-labelledby="timer-heading">
+      <h2 id="timer-heading">Focus Timer</h2>
+
+      <div class="timer-display-wrapper">
+        <output id="timer-display" aria-live="off" aria-label="Remaining time">25:00</output>
+      </div>
+
+      <div class="timer-controls">
+        <button type="button" id="timer-start" aria-label="Start timer">Start</button>
+        <button type="button" id="timer-stop"  aria-label="Stop timer">Stop</button>
+        <button type="button" id="timer-reset" aria-label="Reset timer">Reset</button>
+      </div>
+
+      <div class="timer-duration">
+        <label for="timer-duration-input">Duration (minutes)</label>
+        <input
+          type="number"
+          id="timer-duration-input"
+          min="1"
+          max="120"
+          value="25"
+          aria-describedby="timer-duration-hint"
+        >
+        <span id="timer-duration-hint" class="sr-only">Enter a whole number between 1 and 120</span>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         To-Do List Section
+         TaskModule owns all controls below
+         =================================================== -->
+    <section id="tasks" aria-labelledby="tasks-heading">
+      <h2 id="tasks-heading">To-Do List</h2>
+
+      <div class="task-input-row">
+        <label for="task-input" class="sr-only">New task</label>
+        <input
+          type="text"
+          id="task-input"
+          placeholder="Add a new task…"
+          maxlength="200"
+          autocomplete="off"
+          aria-describedby="task-error"
+        >
+        <button type="button" id="task-add-btn">Add</button>
+      </div>
+
+      <span id="task-error" role="alert" aria-live="polite"></span>
+
+      <ul id="task-list" aria-label="Task list"></ul>
+
+      <button type="button" id="task-sort-btn" class="btn-sort">Sort Tasks</button>
+    </section>
+
+    <!-- ===================================================
+         Quick Links Section
+         LinkModule owns the panel; modal wired separately
+         =================================================== -->
+    <section id="links" aria-labelledby="links-heading">
+      <h2 id="links-heading">Quick Links</h2>
+
+      <div id="links-panel" aria-label="Saved links"></div>
+
+      <button type="button" id="links-add-btn" class="btn-add-link">+ Add Link</button>
+    </section>
+
+  </main>
+
+  <!-- =====================================================
+       Quick Links Modal
+       Native <dialog> — opened/closed by LinkModule
+       ===================================================== -->
+  <dialog id="links-modal" aria-labelledby="modal-heading" aria-modal="true">
+    <h2 id="modal-heading">Add / Edit Link</h2>
+
+    <div class="modal-field">
+      <label for="link-label-input">Label</label>
+      <input
+        type="text"
+        id="link-label-input"
+        placeholder="e.g. GitHub"
+        maxlength="100"
+        autocomplete="off"
+        aria-describedby="link-modal-error"
+      >
+    </div>
+
+    <div class="modal-field">
+      <label for="link-url-input">URL</label>
+      <input
+        type="text"
+        id="link-url-input"
+        placeholder="e.g. https://github.com"
+        maxlength="500"
+        autocomplete="off"
+        aria-describedby="link-modal-error"
+      >
+    </div>
+
+    <span id="link-modal-error" role="alert" aria-live="polite"></span>
+
+    <div class="modal-actions">
+      <button type="button" id="link-modal-save">Save</button>
+      <button type="button" id="link-modal-cancel">Cancel</button>
+    </div>
+  </dialog>
+
+  <script defer src="js/app.js"></script>
+</body>
+</html>

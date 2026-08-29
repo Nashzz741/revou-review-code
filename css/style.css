@@ -1,0 +1,634 @@
+/* ============================================================
+   To-Do List Life Dashboard — Stylesheet
+   Task 9.1: Layout & Header
+   Task 9.2: Interactive components (buttons, modal, task items)
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. CSS Reset & Box Model
+   ---------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ----------------------------------------------------------
+   2. Design Tokens (CSS Custom Properties)
+   ---------------------------------------------------------- */
+:root {
+  /* Palette */
+  --color-bg:         #f0f2f5;
+  --color-surface:    #ffffff;
+  --color-header-bg:  #1e293b;   /* dark slate */
+  --color-accent:     #6366f1;   /* indigo */
+  --color-text:       #1e293b;
+  --color-text-muted: #64748b;
+  --color-border:     #e2e8f0;
+
+  /* Shadows */
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  /* Spacing */
+  --space-xs:  0.25rem;
+  --space-sm:  0.5rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+
+  /* Border radius */
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+
+  /* Typography */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+               "Helvetica Neue", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Consolas, "Liberation Mono",
+               Menlo, monospace;
+}
+
+/* ----------------------------------------------------------
+   3. Base / Body
+   ---------------------------------------------------------- */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  min-height: 100vh;
+}
+
+/* ----------------------------------------------------------
+   4. Header — Greeting Panel
+   ---------------------------------------------------------- */
+header {
+  background-color: var(--color-header-bg);
+  color: #ffffff;
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+/* Clock — large, prominent, monospaced so digits don't shift */
+#clock {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+  color: #ffffff;
+}
+
+/* Date — secondary line below clock */
+#date {
+  display: block;
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: var(--space-xs);
+  letter-spacing: 0.02em;
+}
+
+/* Greeting — accent-colored tagline */
+#greeting {
+  display: block;
+  font-size: clamp(1rem, 2.5vw, 1.375rem);
+  font-weight: 600;
+  color: var(--color-accent);
+  margin-top: var(--space-sm);
+  letter-spacing: 0.01em;
+}
+
+/* ----------------------------------------------------------
+   5. Main — 3-Column Grid (Desktop ≥ 768px)
+   ---------------------------------------------------------- */
+main {
+  display: grid;
+  /* timer | tasks | links — tasks column is wider */
+  grid-template-columns: 1fr 1.6fr 1fr;
+  gap: var(--space-lg);
+  max-width: 1200px;
+  margin: var(--space-xl) auto;
+  padding: 0 var(--space-lg);
+  align-items: start;
+}
+
+/* ----------------------------------------------------------
+   6. Section Cards
+   ---------------------------------------------------------- */
+main > section {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-lg);
+  border: 1px solid var(--color-border);
+}
+
+/* Section heading (h2 inside each section) */
+main > section h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 2px solid var(--color-border);
+}
+
+/* ----------------------------------------------------------
+   7. Mobile Layout — Single Column (< 768px)
+   ---------------------------------------------------------- */
+@media (max-width: 767px) {
+  main {
+    grid-template-columns: 1fr;
+    margin: var(--space-lg) auto;
+    padding: 0 var(--space-md);
+    gap: var(--space-md);
+  }
+
+  header {
+    padding: var(--space-lg) var(--space-md);
+  }
+}
+
+/* ----------------------------------------------------------
+   8. Utility / Accessibility Baseline
+   ---------------------------------------------------------- */
+
+/* Visible focus ring for keyboard users */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Screen-reader-only helper */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+
+/* ============================================================
+   Task 9.2: Interactive Components
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   9. Shared Input & Button Reset
+   ---------------------------------------------------------- */
+input[type="text"],
+input[type="number"] {
+  font-family: var(--font-sans);
+  font-size: 0.9375rem;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  width: 100%;
+  transition: border-color 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: var(--color-accent);
+  outline: none; /* rely on :focus-visible ring already set globally */
+}
+
+/* ----------------------------------------------------------
+   10. Buttons — Base
+   ---------------------------------------------------------- */
+button {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.15s ease, opacity 0.15s ease;
+  white-space: nowrap;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Primary — Add, Save, Start */
+#task-add-btn,
+#link-modal-save,
+#timer-start {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+#task-add-btn:hover:not(:disabled),
+#link-modal-save:hover:not(:disabled),
+#timer-start:hover:not(:disabled) {
+  background-color: #4f52d9;
+}
+
+/* Secondary — Cancel, Reset, Sort */
+#link-modal-cancel,
+#timer-reset,
+#task-sort-btn {
+  background-color: var(--color-border);
+  color: var(--color-text);
+}
+
+#link-modal-cancel:hover:not(:disabled),
+#timer-reset:hover:not(:disabled),
+#task-sort-btn:hover:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+/* Stop — treated as secondary but with warning tone */
+#timer-stop {
+  background-color: var(--color-border);
+  color: var(--color-text);
+}
+
+#timer-stop:hover:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+/* Danger — Delete buttons (added dynamically by JS) */
+.btn-delete-task,
+.btn-delete-link {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-delete-task:hover:not(:disabled),
+.btn-delete-link:hover:not(:disabled) {
+  background-color: #fecaca;
+}
+
+/* Edit buttons */
+.btn-edit-task,
+.btn-edit-link {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.btn-edit-task:hover:not(:disabled),
+.btn-edit-link:hover:not(:disabled) {
+  background-color: #dbeafe;
+}
+
+/* Inline edit save/cancel buttons */
+.btn-save-edit {
+  background-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn-save-edit:hover:not(:disabled) {
+  background-color: #4f52d9;
+}
+
+.btn-cancel-edit {
+  background-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.btn-cancel-edit:hover:not(:disabled) {
+  background-color: #cbd5e1;
+}
+
+/* Add Link button — secondary with dashed border hint */
+#links-add-btn {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-md);
+  background-color: var(--color-bg);
+  color: var(--color-accent);
+  border: 1.5px dashed var(--color-accent);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+}
+
+#links-add-btn:hover:not(:disabled) {
+  background-color: #eef2ff;
+}
+
+/* ----------------------------------------------------------
+   11. Focus Timer
+   ---------------------------------------------------------- */
+.timer-display-wrapper {
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+
+#timer-display {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 7vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+  line-height: 1.1;
+}
+
+.timer-controls {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+  margin-bottom: var(--space-md);
+}
+
+.timer-controls button {
+  flex: 1;
+  max-width: 6rem;
+}
+
+.timer-duration {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.timer-duration label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.timer-duration input[type="number"] {
+  max-width: 8rem;
+}
+
+/* ----------------------------------------------------------
+   12. To-Do List
+   ---------------------------------------------------------- */
+.task-input-row {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+}
+
+.task-input-row input[type="text"] {
+  flex: 1;
+}
+
+.task-input-row #task-add-btn {
+  flex-shrink: 0;
+}
+
+/* Error message — hidden by default */
+#task-error {
+  display: none;
+  font-size: 0.8125rem;
+  color: #dc2626;
+  margin-bottom: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+#task-error:not(:empty) {
+  display: block;
+}
+
+/* Task list */
+#task-list {
+  list-style: none;
+  margin: var(--space-sm) 0 var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+/* Individual task row */
+#task-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  transition: background-color 0.1s ease;
+}
+
+#task-list li:hover {
+  background-color: var(--color-bg);
+  border-color: var(--color-border);
+}
+
+/* Checkbox */
+#task-list li input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+/* Task text span */
+#task-list li .task-text {
+  flex: 1;
+  font-size: 0.9375rem;
+  word-break: break-word;
+  min-width: 0;
+}
+
+/* Done state — strikethrough + muted (Requirement 3.7) */
+#task-list li.task-done .task-text {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+/* Inline edit input inside a task row */
+#task-list li .task-edit-input {
+  flex: 1;
+  font-size: 0.9375rem;
+  padding: var(--space-xs) var(--space-sm);
+}
+
+/* Inline edit error */
+#task-list li .task-edit-error {
+  display: none;
+  font-size: 0.75rem;
+  color: #dc2626;
+}
+
+#task-list li .task-edit-error:not(:empty) {
+  display: block;
+}
+
+/* Task action buttons — compact */
+#task-list li .btn-edit-task,
+#task-list li .btn-delete-task,
+#task-list li .btn-save-edit,
+#task-list li .btn-cancel-edit {
+  flex-shrink: 0;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 0.75rem;
+}
+
+/* Sort button */
+#task-sort-btn {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-xs);
+}
+
+/* ----------------------------------------------------------
+   13. Quick Links — Cards
+   ---------------------------------------------------------- */
+#links-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.link-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.12);
+}
+
+/* Label — shrinks if card is narrow */
+.link-card .link-label {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* Clickable URL — grows to fill available space */
+.link-card .link-url {
+  flex: 1;
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.link-card .link-url:hover {
+  text-decoration: underline;
+}
+
+/* Compact action buttons on each card */
+.link-card .btn-edit-link,
+.link-card .btn-delete-link {
+  flex-shrink: 0;
+  padding: var(--space-xs) var(--space-sm);
+  font-size: 0.75rem;
+}
+
+/* ----------------------------------------------------------
+   14. Quick Links Modal
+   ---------------------------------------------------------- */
+#links-modal {
+  /* Reset <dialog> defaults */
+  border: none;
+  padding: 0;
+  background: transparent;
+
+  /* Center in viewport */
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(92vw, 26rem);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: var(--space-xl);
+}
+
+/* Backdrop — native <dialog>::backdrop */
+#links-modal::backdrop {
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+}
+
+/* Modal heading */
+#links-modal h2 {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: var(--space-lg);
+  /* Override the section h2 uppercase rule */
+  text-transform: none;
+  letter-spacing: normal;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Each label + input pair */
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+}
+
+.modal-field label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Modal error */
+#link-modal-error {
+  display: none;
+  font-size: 0.8125rem;
+  color: #dc2626;
+  margin-bottom: var(--space-md);
+  margin-top: calc(-1 * var(--space-xs));
+}
+
+#link-modal-error:not(:empty) {
+  display: block;
+}
+
+/* Save / Cancel row */
+.modal-actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+  margin-top: var(--space-lg);
+}
+
+.modal-actions button {
+  min-width: 5rem;
+}
